@@ -157,3 +157,8 @@
       - `http://localhost:4200`: `HTTP 200 OK` (Angular Web Portal).
       - `http://localhost:4201`: `HTTP 200 OK` (Ionic + Capacitor Mobile App).
     - **Result**: All 3 apps running concurrently in local development.
+
+25. **[Server Teardown]**:
+    - **Action**: Terminated background task running `npm run dev:all`.
+    - **Verification**: Verified ports `3000`, `4200`, and `4201` are closed and released.
+    - **Result**: All servers cleanly stopped.
