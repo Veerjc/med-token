@@ -136,3 +136,7 @@
     - `CI=true npx nx run-many -t lint` -> 4/4 lint targets passed (0 errors, 0 warnings).
     - `npm run mobile:sync` -> Native assets synchronized in 0.115s.
     - **Result**: Monorepo Foundation & Code Sharing (Phase 1) 100% verified and green.
+
+22. **[Git Initial Commit]**: `cd medical-proj && git add . && git commit -m "feat(infra): initialize nx monorepo with nestjs, angular web, and ionic capacitor mobile"`
+    - **Purpose**: Create initial Git baseline commit capturing the entire scaffolded monorepo, governance docs, configuration files, and verified starter code.
+    - **Result**: Committed 145 files (commit `4054d94`) on branch `main`.
