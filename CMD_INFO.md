@@ -234,3 +234,4 @@ npx nx g @nx/angular:library shared-ui --directory=libs/shared/ui --standalone=t
 | `npx nx show project web` | Inspects all targets, configurations, and paths for `web` |
 | `npx nx show project mobile` | Inspects all targets, configurations, and paths for `mobile` |
 | `npx nx reset` | Clears the Nx daemon and cache if builds feel out-of-sync |
+
