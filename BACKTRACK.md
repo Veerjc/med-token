@@ -145,3 +145,15 @@
     - **Purpose**: Create a centralized CLI reference and cheat sheet covering all daily development commands, build targets, unit testing, watch mode, coverage, linting/auto-fix, mobile Capacitor sync/run, E2E testing commands, and Nx code generators.
     - **Files Created**: `medical-proj/CMD_INFO.md`.
     - **Result**: Successfully created.
+
+24. **[Multi-App Dev Server Execution]**:
+    - **Configuration**:
+      - Enabled CORS in `apps/api/src/main.ts`.
+      - Assigned non-conflicting port `4201` to `apps/mobile` in `apps/mobile/project.json`.
+      - Added `"dev:all": "nx run-many -t serve -p api web mobile"` to `package.json`.
+    - **Command**: `npm run dev:all`
+    - **Verification**:
+      - `http://localhost:3000/api`: `HTTP 200 OK` (NestJS API Gateway returning `UserDto`).
+      - `http://localhost:4200`: `HTTP 200 OK` (Angular Web Portal).
+      - `http://localhost:4201`: `HTTP 200 OK` (Ionic + Capacitor Mobile App).
+    - **Result**: All 3 apps running concurrently in local development.
