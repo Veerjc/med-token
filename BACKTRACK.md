@@ -140,3 +140,8 @@
 22. **[Git Initial Commit]**: `cd medical-proj && git add . && git commit -m "feat(infra): initialize nx monorepo with nestjs, angular web, and ionic capacitor mobile"`
     - **Purpose**: Create initial Git baseline commit capturing the entire scaffolded monorepo, governance docs, configuration files, and verified starter code.
     - **Result**: Committed 145 files (commit `4054d94`) on branch `main`.
+
+23. **[File Creation]**: `medical-proj/CMD_INFO.md`
+    - **Purpose**: Create a centralized CLI reference and cheat sheet covering all daily development commands, build targets, unit testing, watch mode, coverage, linting/auto-fix, mobile Capacitor sync/run, E2E testing commands, and Nx code generators.
+    - **Files Created**: `medical-proj/CMD_INFO.md`.
+    - **Result**: Successfully created.

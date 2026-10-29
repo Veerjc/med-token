@@ -26,6 +26,8 @@ Whenever a new session starts:
    - After completing any significant task, update `PROJECT_STATE.md` (check off completed items, log recent activity with timestamp, and set the next active task).
 4. **Backtrack Logging Rule**:
    - Whenever executing commands, installing dependencies, running generators, or creating/modifying files, record the exact command, purpose, and outcome in `BACKTRACK.md` under the current Day/Date.
+5. **Command Reference Rule**:
+   - Refer to `CMD_INFO.md` for standard execution commands (dev serve, builds, unit tests, linting, e2e, and code generators).
 
 ---
 
