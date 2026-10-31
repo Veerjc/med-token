@@ -306,3 +306,9 @@
       - `web` (Angular 22 Web Portal) on `http://localhost:4200`
       - `mobile` (Ionic 9 + Capacitor 8 Mobile Portal) on `http://localhost:4201`
     - **Result**: Entire multi-app system (backend container stack + both frontend applications) is actively running, responsive, and verified.
+
+24. **[Teardown & Shutdown of All Local Services]**:
+    - **Frontend Teardown**: Cancelled background dev server task (`nx run-many -t serve -p web mobile`).
+    - **Docker Teardown**: Executed `docker compose down`, stopping and removing `medical-api`, `medical-postgres`, `medical-redis`, and `medical_network`.
+    - **Verification**: Verified via `lsof` and `docker compose ps` that ports `3000`, `4200`, `4201`, `5432`, and `6379` are completely free with zero background processes or containers remaining.
+    - **Result**: Clean teardown of all local services.
