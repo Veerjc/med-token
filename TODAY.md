@@ -6,11 +6,11 @@
 
 ## 1. Code Push Strategy Options
 
-| Option       | Strategy                                     | Pros                                                                                                                                       | Cons / Dependencies                 | Status                           |
-| :----------- | :------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------- | :------------------------------- |
-| **Option 1** | **Initial Baseline Push (Right Now)**        | • Secure off-site cloud backup immediately.<br>• Establishes remote repository on GitHub/GitLab.<br>• Verified Phase 1 baseline preserved. | • Completed.                        | ✅ **COMPLETED** (`origin/main`) |
-| **Option 2** | **Phase 2: Quality Gates & Git Hooks**       | • Prettier, Husky, lint-staged, and Commitlint guard all commits.<br>• Ensures pristine commit history.                                    | • Verified. Ready to commit & push. | ✅ **COMPLETED & VERIFIED**      |
-| **Option 3** | **Phase 3: CI/CD Pipeline (GitHub Actions)** | • Cloud validation on PRs using `nx affected`.<br>• Automated Docker container build.                                                      | • In Progress.                      | 🚀 **NEXT UP**                   |
+| Option       | Strategy                                     | Pros                                                                                                                                       | Cons / Dependencies              | Status                           |
+| :----------- | :------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------- | :------------------------------- |
+| **Option 1** | **Initial Baseline Push (Right Now)**        | • Secure off-site cloud backup immediately.<br>• Establishes remote repository on GitHub/GitLab.<br>• Verified Phase 1 baseline preserved. | • Completed.                     | ✅ **COMPLETED** (`origin/main`) |
+| **Option 2** | **Phase 2: Quality Gates & Git Hooks**       | • Prettier, Husky, lint-staged, and Commitlint guard all commits.<br>• Ensures pristine commit history.                                    | • Verified and merged to `main`. | ✅ **COMPLETED & MERGED**        |
+| **Option 3** | **Phase 3: CI/CD Pipeline (GitHub Actions)** | • Cloud validation on PRs using `nx affected`.<br>• Automated Docker container build.                                                      | • Ready on feature branch.       | 🚀 **READY TO PUSH & PR**        |
 
 ---
 
@@ -54,8 +54,22 @@
 
 ---
 
-## 4. Next Up: Phase 3 CI/CD Pipeline (GitHub Actions)
+## 4. Phase 3 CI/CD Pipeline & Docker (Feature Branch: `feat/ci-cd-pipeline`)
 
-- [ ] Create GitHub Actions PR workflow (`.github/workflows/ci.yml`) using `nx affected`
-- [ ] Add NestJS Dockerfile (multi-stage production build)
-- [ ] Push Phase 2 & Phase 3 to GitHub (`origin/main`)
+### Completed Checklist:
+
+- [x] Create GitHub Actions PR workflow (`.github/workflows/ci.yml`) using `nx affected`
+- [x] Add NestJS Dockerfile (multi-stage production build in `apps/api/Dockerfile`)
+- [x] Add `.dockerignore` for container builds
+- [x] Add `npm run docker:build:api` script to `package.json`
+- [x] Verify Prettier formatting (`npm run format:check`)
+- [ ] Push feature branch to `origin/feat/ci-cd-pipeline`
+- [ ] Open Pull Request on GitHub to merge into `main`
+
+---
+
+## 5. Next Up: Phase 4 Local Dev Environment & Containers
+
+- [ ] Create `docker-compose.yml` for local PostgreSQL & Redis
+- [ ] Setup `.env.example` with configuration validation
+- [ ] Add database healthcheck and seed script
