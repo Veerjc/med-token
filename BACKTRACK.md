@@ -284,3 +284,12 @@
       - Documented `@medical-proj/shared-models` contracts (`UserDto`, `AppointmentDto`, `ApiResponse<T>`) and architectural isolation rule.
       - Updated root `GEMINI.md` pointer with all documentation files.
     - **Result**: All project documentation synchronized, formatted, and up to date.
+
+22. **[Full Docker Application Execution & Verification]**:
+    - **Command**: `npm run docker:all:up` (`docker compose up -d --build`).
+    - **Containers Verified**:
+      - `medical-postgres` (`postgres:16-alpine`): Healthy on port `5432`.
+      - `medical-redis` (`redis:7-alpine`): Healthy on port `6379`.
+      - `medical-api` (`medical-proj-api`): Up on port `3000`.
+    - **Verification**: `curl -i http://localhost:3000/api` returned `HTTP 200 OK` with JSON `ApiResponse<UserDto>`.
+    - **Result**: Full containerized application stack running locally and verified healthy.
