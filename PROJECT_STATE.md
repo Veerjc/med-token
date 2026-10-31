@@ -14,13 +14,14 @@
   - `apps/mobile`: Angular 22 + Ionic Framework + Capacitor (iOS & Android native targets)
 - **Shared Libraries**:
   - `libs/shared/models`: Pure TypeScript DTOs, interfaces, and enums (`@medical-proj/shared-models`)
+- **Cloud Infrastructure Target**: Amazon Web Services (AWS) — ADR-006
 
 ---
 
 ## 2. Current Status
 
-- **Current Phase**: **Phase 3 — CI/CD Pipeline (GitHub Actions)**
-- **Status**: 🟢 Phase 1 (Monorepo Foundation) & Phase 2 (Quality Gates & Git Hooks) complete and 100% verified.
+- **Current Phase**: **Phase 4 — Local Dev Environment & Containers**
+- **Status**: 🟢 Phase 1, Phase 2, and Phase 3 complete and merged to `main` via PR #1.
 - **Remote Repository**: `https://github.com/Veerjc/med-token.git` (`origin/main`)
 - **Verification Metrics**:
   - Builds: `3/3 apps build clean (0 errors)`
@@ -28,6 +29,7 @@
   - Lint: `4/4 projects pass (0 errors, 0 warnings)`
   - Format: `Prettier standardized across all apps & libs (100% match)`
   - Git Hooks: `Husky pre-commit (lint-staged) & commit-msg (commitlint) verified`
+  - CI/CD: `GitHub Actions PR quality gates (.github/workflows/ci.yml) passing`
   - Native Sync: `Android & iOS platforms synced in 0.115s`
 - **Last Updated**: 2026-10-31
 
@@ -81,11 +83,13 @@
 
 ## 4. Active Task & Immediate Next Steps
 
-- **Active Task**: Push feature branch `feat/ci-cd-pipeline` to GitHub, open PR against `main`, and transition to Phase 4 (Local Dev Environment & Containers).
+- **Active Task**: Phase 4 Local Dev Environment & Containers — Spin up PostgreSQL 16 & Redis 7 via Docker Compose and configure environment validation in `apps/api`.
 - **Next Steps**:
-  1. Commit and push feature branch `feat/ci-cd-pipeline` to `origin`.
-  2. Verify GitHub Actions workflow run on GitHub.
-  3. Prepare Phase 4 local PostgreSQL and Redis `docker-compose.yml`.
+  1. Create feature branch `feat/local-dev-containers`.
+  2. Create `docker-compose.yml` for PostgreSQL 16 & Redis 7 with persistent volumes, custom healthchecks, and default healthcare database.
+  3. Create `.env.example` and `.env` with validation for database and Redis credentials.
+  4. Setup `@nestjs/config` validation in `apps/api`.
+  5. Add convenience scripts to `package.json` (`docker:db:up`, `docker:db:down`).
 
 ---
 
@@ -96,6 +100,7 @@
 - **ADR-003 (2026-10-29)**: Mandated Angular standalone components and Signals for fine-grained reactivity and Zoneless performance.
 - **ADR-004 (2026-10-29)**: Set `"useDaemonProcess": false` in `nx.json` to prevent Unix socket domain connection timeouts and IPC worker crashes in isolated development environments.
 - **ADR-005 (2026-10-29)**: Configured Jest `transformIgnorePatterns` for `@ionic/angular` and Ionic dependencies so Jest can process pure ESM modules.
+- **ADR-006 (2026-10-31)**: Selected **AWS** as the target cloud provider for production deployment. Target architecture: AWS ECS Fargate (serverless NestJS API containers), Amazon RDS PostgreSQL (data persistence), Amazon ElastiCache (Redis caching/queues), Amazon CloudFront + S3 (Angular web distribution), Amazon S3 with SSE-KMS and presigned URLs (prescriptions and medical records).
 
 ---
 
@@ -106,3 +111,4 @@
 - **2026-10-31**: Created `TODAY.md` tracking strategy options. Executed Option 1: linked GitHub remote `https://github.com/Veerjc/med-token.git` and pushed initial baseline to `origin/main`. Activated Phase 2 Quality Gates.
 - **2026-10-31**: Completed Phase 2 Quality Gates — Installed and configured Prettier (`.prettierrc`, `.prettierignore`, `npm run format:check`, `npm run format:write`), Husky v9 (`.husky/pre-commit`, `.husky/commit-msg`), `lint-staged` (`.lintstagedrc.json`), and Commitlint (`commitlint.config.js`). Verified pre-commit auto-formatting and commit-msg Conventional Commits enforcement. Verified all builds, tests, and linter pass 100%.
 - **2026-10-31**: Created feature branch `feat/ci-cd-pipeline`. Implemented Phase 3 CI/CD Pipeline — Created `.github/workflows/ci.yml` using `nx affected` (Prettier, ESLint, Jest, and Production build verification), NestJS multi-stage production Dockerfile (`apps/api/Dockerfile`), `.dockerignore`, and added `docker:build:api` script to `package.json`.
+- **2026-10-31**: Merged PR #1 (`feat/ci-cd-pipeline` ➔ `main`) with passing GitHub Actions checks. Recorded ADR-006 selecting AWS as cloud infrastructure provider. Transitioned active phase to Phase 4 (Local Dev Environment & Containers).

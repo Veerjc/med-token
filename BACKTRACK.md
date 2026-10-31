@@ -245,3 +245,13 @@
     - **Fix**: Replaced `--codeCoverage` with Jest's native `--coverage` flag in `.github/workflows/ci.yml`.
     - **Verification**: Verified `npx nx test api --ci --coverage`, `web`, and `mobile` pass 100% locally.
     - **Result**: CI workflow test step fixed and verified.
+
+15. **[Pull Request Merge & Branch Sync]**:
+    - **Action**: PR #1 (`feat/ci-cd-pipeline` ➔ `main`) approved and merged on GitHub.
+    - **Command**: `git checkout main && git pull origin main && git branch -d feat/ci-cd-pipeline`.
+    - **Result**: Local `main` synchronized with `origin/main` at commit `7b5046c`; feature branch cleanly pruned.
+
+16. **[Cloud Provider Architecture Decision (ADR-006)]**:
+    - **Decision**: Formally selected Amazon Web Services (AWS) as production cloud target.
+    - **Specifications**: Documented AWS cloud topology (ECS Fargate, RDS PostgreSQL 16, ElastiCache Redis, S3 + CloudFront, KMS) in `ARCHITECTURE.md` and recorded ADR-006 in `PROJECT_STATE.md`.
+    - **Result**: Cloud target codified; prepared for Phase 4 Local Dev Environment & Containers.

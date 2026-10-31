@@ -179,3 +179,45 @@ flowchart LR
 | `npm run mobile:sync`    | Builds mobile and syncs native assets      | `apps/mobile/android` & `ios` |
 | `npm run mobile:ios`     | Launches mobile app in Xcode               | macOS native development      |
 | `npm run mobile:android` | Launches mobile app in Android Studio      | Android native development    |
+
+---
+
+## 9. Cloud Architecture & Target Topology (AWS)
+
+Per **ADR-006**, Amazon Web Services (AWS) is the designated cloud infrastructure provider.
+
+```mermaid
+flowchart TD
+    UserClient["Patients / Doctors / Admin (Web & Mobile)"] --> Route53["Amazon Route 53 (DNS)"]
+
+    subgraph EdgeLayer["Edge & CDN"]
+        Route53 --> CFWeb["CloudFront CDN (Angular Web)"]
+        CFWeb --> S3Web["S3 Bucket (Static SPA)"]
+        Route53 --> ALB["Application Load Balancer (ALB)"]
+    end
+
+    subgraph VPC["Virtual Private Cloud (VPC)"]
+        ALB --> ECS["AWS ECS Fargate (NestJS API Cluster)"]
+
+        subgraph PrivateData["Private Subnet (Data Tier)"]
+            ECS --> RDS["Amazon RDS PostgreSQL (Multi-AZ Encrypted)"]
+            ECS --> Redis["Amazon ElastiCache for Redis (Queue & Cache)"]
+            ECS --> S3Docs["Amazon S3 (Prescriptions / Scans with SSE-KMS)"]
+        end
+    end
+
+    subgraph SecurityAudit["Security & Compliance"]
+        KMS["AWS KMS (Key Management)"] -.-> RDS
+        KMS -.-> S3Docs
+        CloudWatch["CloudWatch + CloudTrail (Audit Logs)"]
+    end
+```
+
+### AWS Service Architecture Breakdown
+
+1. **Frontend Hosting (`apps/web`)**: Amazon CloudFront CDN + Amazon S3 static website bucket with global edge caching and automatic SPA fallback.
+2. **Backend API Gateway (`apps/api`)**: AWS ECS Fargate serverless container tasks running inside private subnets behind an Application Load Balancer (ALB) with auto-scaling.
+3. **Relational Database**: Amazon RDS for PostgreSQL 16 (Multi-AZ failover, automated point-in-time recovery, and AWS KMS encryption at rest).
+4. **Caching & Live Token Queues**: Amazon ElastiCache for Redis (rate limiting, session tokens, and live waiting-room queue state).
+5. **Medical Documents & PHI Storage**: Amazon S3 with Server-Side Encryption (SSE-KMS), strict Block Public Access, and time-limited presigned URLs (15m expiry) for patient reports and prescriptions.
+6. **Healthcare Compliance**: AWS Business Associate Addendum (BAA) coverage, TLS 1.3 in-flight encryption, and immutable access logging via AWS CloudTrail and Amazon CloudWatch.
