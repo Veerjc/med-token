@@ -16,9 +16,10 @@
     "mobile:ios": "cd apps/mobile && npx cap open ios",
     "mobile:android": "cd apps/mobile && npx cap open android",
     "docker:build:api": "docker build -f apps/api/Dockerfile -t medical-api:latest .",
-    "docker:db:up": "docker compose up -d",
-    "docker:db:down": "docker compose down",
-    "docker:db:logs": "docker compose logs -f",
+    "docker:db:up": "docker compose up -d postgres redis",
+    "docker:all:up": "docker compose up -d --build",
+    "docker:all:down": "docker compose down",
+    "docker:all:logs": "docker compose logs -f",
     "prepare": "husky"
   },
   "private": true,

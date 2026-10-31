@@ -67,17 +67,29 @@ npm run docker:build:api
 docker build -f apps/api/Dockerfile -t medical-api:latest .
 ```
 
-### Docker Compose Database & Cache (PostgreSQL 16 & Redis 7)
+### Docker Compose Commands
+
+#### Option A: Run Full Application in Docker (API + PostgreSQL + Redis)
+
+```bash
+# Build & start full application stack in background
+npm run docker:all:up
+
+# View live container logs
+npm run docker:all:logs
+
+# Stop all containers
+npm run docker:all:down
+```
+
+#### Option B: Run Databases Only (PostgreSQL + Redis) for Native App Development
 
 ```bash
 # Start PostgreSQL & Redis in the background
 npm run docker:db:up
 
-# View live container logs
-npm run docker:db:logs
-
-# Stop database and cache containers
-npm run docker:db:down
+# Run apps natively with hot-reload:
+npm run dev:all
 ```
 
 ---
