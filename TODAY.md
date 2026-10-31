@@ -54,7 +54,7 @@
 
 ---
 
-## 4. Phase 3 CI/CD Pipeline & Docker (Feature Branch: `feat/ci-cd-pipeline`)
+## 4. Phase 3 CI/CD Pipeline & Docker (Merged to `main` via PR #1)
 
 ### Completed Checklist:
 
@@ -63,13 +63,25 @@
 - [x] Add `.dockerignore` for container builds
 - [x] Add `npm run docker:build:api` script to `package.json`
 - [x] Verify Prettier formatting (`npm run format:check`)
-- [ ] Push feature branch to `origin/feat/ci-cd-pipeline`
-- [ ] Open Pull Request on GitHub to merge into `main`
+- [x] Push feature branch to `origin/feat/ci-cd-pipeline`
+- [x] Open Pull Request #1 and merge into `main` with all passing checks
 
 ---
 
-## 5. Next Up: Phase 4 Local Dev Environment & Containers
+## 5. Phase 4 Local Dev Environment & Containers (Feature Branch: `feat/local-dev-containers`)
 
-- [ ] Create `docker-compose.yml` for local PostgreSQL & Redis
-- [ ] Setup `.env.example` with configuration validation
-- [ ] Add database healthcheck and seed script
+### Completed Checklist:
+
+- [x] Create `docker-compose.yml` for local PostgreSQL 16 & Redis 7 with healthchecks and persistent volumes
+- [x] Create `.env.example` with documented keys for API, DB, Redis, Ports, and AWS
+- [x] Create `.env` for local development (ignored in `.gitignore`)
+- [x] Install and configure `@nestjs/config` with Joi environment validation in `apps/api`
+- [x] Add convenience scripts to `package.json` (`docker:db:up`, `docker:db:down`, `docker:db:logs`)
+- [x] Update `CMD_INFO.md` and verify builds, tests, and linter (100% pass)
+
+---
+
+## 6. Next Up: Phase 5 Healthcare Business Logic (Custom Plan)
+
+- [ ] Review user's custom requirements and architectural plan for Phase 5
+- [ ] Create feature branch for Phase 5 implementation

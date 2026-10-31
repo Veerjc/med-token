@@ -67,29 +67,28 @@
 
 ### Phase 4: Local Dev Environment & Containers
 
-- [ ] Create `docker-compose.yml` for local PostgreSQL & Redis
-- [ ] Setup `.env.example` with configuration validation
-- [x] Configure root `package.json` convenience scripts (`npm run dev:api`, `npm run dev:web`, etc.)
+- [x] Create `docker-compose.yml` for local PostgreSQL 16 & Redis 7
+- [x] Setup `.env.example` and `.gitignore` environment guards
+- [x] Configure `@nestjs/config` and Joi environment validation in `apps/api`
+- [x] Configure root `package.json` convenience scripts (`docker:db:up`, `docker:db:down`, `docker:db:logs`)
 
 ### Phase 5: Business Logic (Healthcare Domain)
 
-- [ ] Authentication & Role-Based Access Control (Doctor, Patient, Admin)
-- [ ] Patient Management Module
-- [ ] Doctor & Appointment Scheduling Module
-- [ ] Medical Records & Prescriptions
-- [ ] Real-time Consultations / Notifications (WebSockets)
+- [ ] Align on custom Phase 5 plan with user
+- [ ] Authentication & Role-Based Access Control
+- [ ] Healthcare Core Data Models & Schemas
+- [ ] Patient & Doctor Modules
+- [ ] Real-time Queue & Appointments
 
 ---
 
 ## 4. Active Task & Immediate Next Steps
 
-- **Active Task**: Phase 4 Local Dev Environment & Containers — Spin up PostgreSQL 16 & Redis 7 via Docker Compose and configure environment validation in `apps/api`.
+- **Active Task**: Commit and push Phase 4 to GitHub (`feat/local-dev-containers`), open PR to `main`, and gather requirements for the user's custom Phase 5 plan.
 - **Next Steps**:
-  1. Create feature branch `feat/local-dev-containers`.
-  2. Create `docker-compose.yml` for PostgreSQL 16 & Redis 7 with persistent volumes, custom healthchecks, and default healthcare database.
-  3. Create `.env.example` and `.env` with validation for database and Redis credentials.
-  4. Setup `@nestjs/config` validation in `apps/api`.
-  5. Add convenience scripts to `package.json` (`docker:db:up`, `docker:db:down`).
+  1. Commit Phase 4 changes on `feat/local-dev-containers`.
+  2. Push feature branch to `origin/feat/local-dev-containers`.
+  3. Align with user on the specific Phase 5 requirements, modules, and workflows.
 
 ---
 
@@ -112,3 +111,4 @@
 - **2026-10-31**: Completed Phase 2 Quality Gates — Installed and configured Prettier (`.prettierrc`, `.prettierignore`, `npm run format:check`, `npm run format:write`), Husky v9 (`.husky/pre-commit`, `.husky/commit-msg`), `lint-staged` (`.lintstagedrc.json`), and Commitlint (`commitlint.config.js`). Verified pre-commit auto-formatting and commit-msg Conventional Commits enforcement. Verified all builds, tests, and linter pass 100%.
 - **2026-10-31**: Created feature branch `feat/ci-cd-pipeline`. Implemented Phase 3 CI/CD Pipeline — Created `.github/workflows/ci.yml` using `nx affected` (Prettier, ESLint, Jest, and Production build verification), NestJS multi-stage production Dockerfile (`apps/api/Dockerfile`), `.dockerignore`, and added `docker:build:api` script to `package.json`.
 - **2026-10-31**: Merged PR #1 (`feat/ci-cd-pipeline` ➔ `main`) with passing GitHub Actions checks. Recorded ADR-006 selecting AWS as cloud infrastructure provider. Transitioned active phase to Phase 4 (Local Dev Environment & Containers).
+- **2026-10-31**: Created feature branch `feat/local-dev-containers`. Implemented Phase 4 Local Dev Environment & Containers — Created `docker-compose.yml` (PostgreSQL 16 & Redis 7 with healthchecks), `.env.example`, `.env`, configured `@nestjs/config` with Joi environment validation in `apps/api`, added docker db convenience scripts to `package.json`, and updated `CMD_INFO.md`. Ready for Phase 5 custom planning.

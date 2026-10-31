@@ -67,6 +67,19 @@ npm run docker:build:api
 docker build -f apps/api/Dockerfile -t medical-api:latest .
 ```
 
+### Docker Compose Database & Cache (PostgreSQL 16 & Redis 7)
+
+```bash
+# Start PostgreSQL & Redis in the background
+npm run docker:db:up
+
+# View live container logs
+npm run docker:db:logs
+
+# Stop database and cache containers
+npm run docker:db:down
+```
+
 ---
 
 ## 3. Test Commands (Unit Testing with Jest)

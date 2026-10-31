@@ -16,6 +16,9 @@
     "mobile:ios": "cd apps/mobile && npx cap open ios",
     "mobile:android": "cd apps/mobile && npx cap open android",
     "docker:build:api": "docker build -f apps/api/Dockerfile -t medical-api:latest .",
+    "docker:db:up": "docker compose up -d",
+    "docker:db:down": "docker compose down",
+    "docker:db:logs": "docker compose logs -f",
     "prepare": "husky"
   },
   "private": true,
@@ -44,6 +47,7 @@
     "@schematics/angular": "~22.2.0",
     "@swc/helpers": "~0.5.18",
     "@types/jest": "~30.0.0",
+    "@types/joi": "^17.2.2",
     "@types/node": "^22.0.0",
     "@typescript-eslint/utils": "^8.58.0",
     "angular-eslint": "^22.5.0",
@@ -82,8 +86,10 @@
     "@capacitor/ios": "^8.6.0",
     "@ionic/angular": "^9.0.10",
     "@nestjs/common": "^11.0.0",
+    "@nestjs/config": "^12.0.1",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "joi": "^18.3.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.0"
   }

@@ -255,3 +255,24 @@
     - **Decision**: Formally selected Amazon Web Services (AWS) as production cloud target.
     - **Specifications**: Documented AWS cloud topology (ECS Fargate, RDS PostgreSQL 16, ElastiCache Redis, S3 + CloudFront, KMS) in `ARCHITECTURE.md` and recorded ADR-006 in `PROJECT_STATE.md`.
     - **Result**: Cloud target codified; prepared for Phase 4 Local Dev Environment & Containers.
+
+17. **[Branch Creation]**: `git checkout -b feat/local-dev-containers`
+    - **Purpose**: Create dedicated feature branch for Phase 4 local development environment setup.
+    - **Branch**: `feat/local-dev-containers`.
+    - **Result**: Successfully created and switched to branch.
+
+18. **[Configuration Dependencies Installation]**: `npm install @nestjs/config joi && npm install -D @types/joi`
+    - **Purpose**: Add environment variable management and validation tooling for NestJS API.
+    - **Result**: Installed dependencies cleanly.
+
+19. **[Local Dev Infrastructure & Environment Guards]**:
+    - **Files Created**: `docker-compose.yml` (PostgreSQL 16 & Redis 7 services with healthchecks, persistent volumes, and bridge network), `.env.example`, `.env`.
+    - **Git Protection**: Added `.env`, `.env.local` to `.gitignore`.
+    - **API Integration**: Created `apps/api/src/app/config/env.validation.ts` using Joi; registered `ConfigModule.forRoot({ isGlobal: true, validate: validateEnv })` in `AppModule`.
+    - **Scripts Added**: `"docker:db:up"`, `"docker:db:down"`, `"docker:db:logs"` in `package.json`.
+    - **Documentation**: Updated `CMD_INFO.md`, `PROJECT_STATE.md`, and `TODAY.md`.
+    - **Result**: Local database and caching layer containerized; environment variables validated on API startup.
+
+20. **[Quality Gate Verification]**:
+    - **Commands**: `npm run format:check`, `npm run lint:all`, `npm run test:all`, `npm run build:all`.
+    - **Result**: 100% clean formatting, 4/4 lint projects pass, 3/3 test suites pass, 3/3 production builds pass.
