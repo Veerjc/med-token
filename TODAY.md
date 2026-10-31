@@ -76,8 +76,10 @@
 - [x] Create `.env.example` with documented keys for API, DB, Redis, Ports, and AWS
 - [x] Create `.env` for local development (ignored in `.gitignore`)
 - [x] Install and configure `@nestjs/config` with Joi environment validation in `apps/api`
-- [x] Add convenience scripts to `package.json` (`docker:db:up`, `docker:db:down`, `docker:db:logs`)
+- [x] Add convenience scripts to `package.json` (`docker:db:up`, `docker:db:down`, `docker:db:logs`, `dev:frontends`)
 - [x] Update `CMD_INFO.md` and verify builds, tests, and linter (100% pass)
+- [x] Launch full Docker backend stack (`postgres`, `redis`, `api`) verified with `curl -i http://localhost:3000/api`
+- [x] Launch both frontend applications (`apps/web` on `4200` and `apps/mobile` on `4201`) verified with `HTTP 200 OK`
 
 ---
 

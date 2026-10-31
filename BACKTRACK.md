@@ -293,3 +293,16 @@
       - `medical-api` (`medical-proj-api`): Up on port `3000`.
     - **Verification**: `curl -i http://localhost:3000/api` returned `HTTP 200 OK` with JSON `ApiResponse<UserDto>`.
     - **Result**: Full containerized application stack running locally and verified healthy.
+
+23. **[Frontend Applications Execution & Verification]**:
+    - **Command**: `npx nx run-many -t serve -p web mobile` (added root script `"dev:frontends": "nx run-many -t serve -p web mobile"` in `package.json` and explicit port 4200 in `apps/web/project.json`).
+    - **Services Running**:
+      - `apps/web` (Angular 22 Standalone Web Portal): Listening on `http://localhost:4200` (`HTTP 200 OK`).
+      - `apps/mobile` (Ionic 9 + Angular 22 Patient Portal preview): Listening on `http://localhost:4201` (`HTTP 200 OK`).
+    - **Full Stack Status**:
+      - `medical-postgres` (PostgreSQL 16) on `localhost:5432`
+      - `medical-redis` (Redis 7) on `localhost:6379`
+      - `medical-api` (NestJS 11 in Docker) on `http://localhost:3000/api`
+      - `web` (Angular 22 Web Portal) on `http://localhost:4200`
+      - `mobile` (Ionic 9 + Capacitor 8 Mobile Portal) on `http://localhost:4201`
+    - **Result**: Entire multi-app system (backend container stack + both frontend applications) is actively running, responsive, and verified.

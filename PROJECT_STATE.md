@@ -70,7 +70,9 @@
 - [x] Create `docker-compose.yml` for local PostgreSQL 16 & Redis 7
 - [x] Setup `.env.example` and `.gitignore` environment guards
 - [x] Configure `@nestjs/config` and Joi environment validation in `apps/api`
-- [x] Configure root `package.json` convenience scripts (`docker:db:up`, `docker:db:down`, `docker:db:logs`)
+- [x] Configure root `package.json` convenience scripts (`docker:db:up`, `docker:db:down`, `docker:db:logs`, `dev:frontends`)
+- [x] Verify full Docker application stack (`medical-api`, `medical-postgres`, `medical-redis`)
+- [x] Launch both frontend applications (`apps/web` on port 4200, `apps/mobile` on port 4201) in parallel
 
 ### Phase 5: Business Logic (Healthcare Domain)
 

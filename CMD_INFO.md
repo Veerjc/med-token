@@ -6,11 +6,13 @@ This document is the central reference for all commands to run, build, test, lin
 
 ## 1. Quick Start: Daily Development
 
-| Command              | Action                           | URL / Environment                     |
-| :------------------- | :------------------------------- | :------------------------------------ |
-| `npm run dev:api`    | Starts the NestJS API server     | `http://localhost:3000`               |
-| `npm run dev:web`    | Starts the Angular Web Portal    | `http://localhost:4200`               |
-| `npm run dev:mobile` | Starts the Mobile App in browser | `http://localhost:4200` (mobile view) |
+| Command                 | Action                                | URL / Environment        |
+| :---------------------- | :------------------------------------ | :----------------------- |
+| `npm run dev:api`       | Starts the NestJS API server          | `http://localhost:3000`  |
+| `npm run dev:web`       | Starts the Angular Web Portal         | `http://localhost:4200`  |
+| `npm run dev:mobile`    | Starts the Mobile App in browser      | `http://localhost:4201`  |
+| `npm run dev:frontends` | Starts Web & Mobile concurrently      | Ports `4200` and `4201`  |
+| `npm run dev:all`       | Starts API, Web & Mobile concurrently | Ports `3000, 4200, 4201` |
 
 ### Alternative direct Nx commands:
 

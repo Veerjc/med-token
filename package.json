@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev:all": "nx run-many -t serve -p api web mobile",
+    "dev:frontends": "nx run-many -t serve -p web mobile",
     "dev:api": "nx serve api",
     "dev:web": "nx serve web",
     "dev:mobile": "nx serve mobile",
