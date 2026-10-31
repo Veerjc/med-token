@@ -15,6 +15,7 @@
     "mobile:sync": "nx build mobile && cd apps/mobile && npx cap sync",
     "mobile:ios": "cd apps/mobile && npx cap open ios",
     "mobile:android": "cd apps/mobile && npx cap open android",
+    "docker:build:api": "docker build -f apps/api/Dockerfile -t medical-api:latest .",
     "prepare": "husky"
   },
   "private": true,

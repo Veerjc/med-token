@@ -57,6 +57,16 @@ npx nx build mobile
 npx nx affected -t build
 ```
 
+### Docker Container Build (NestJS Backend API)
+
+```bash
+# Using root script
+npm run docker:build:api
+
+# Direct docker command
+docker build -f apps/api/Dockerfile -t medical-api:latest .
+```
+
 ---
 
 ## 3. Test Commands (Unit Testing with Jest)

@@ -217,3 +217,31 @@
 9. **[Phase 2 Git Push]**: `git push origin main`
    - **Commit**: `e6b25cd` (`feat(quality): configure prettier, husky, lint-staged, and commitlint quality gates`).
    - **Result**: Pushed successfully to `https://github.com/Veerjc/med-token.git` on branch `main`.
+
+10. **[Branch Creation]**: `git checkout -b feat/ci-cd-pipeline`
+    - **Purpose**: Create dedicated feature branch for Phase 3 CI/CD pipeline implementation.
+    - **Branch**: `feat/ci-cd-pipeline`.
+    - **Result**: Successfully created and switched to branch.
+
+11. **[CI/CD Workflow Creation]**:
+    - **Files Created**: `.github/workflows/ci.yml`.
+    - **Features**: Triggers on PR/push to `main`, uses `actions/checkout@v4` with `fetch-depth: 0`, Node.js 22, `npm ci`, `nrwl/nx-set-shas@v4` for affected tracking, Prettier formatting verification, and `nx affected` across `lint`, `test`, and `build`.
+    - **Result**: Automated PR quality gate ready for cloud execution.
+
+12. **[NestJS Multi-Stage Dockerfile]**:
+    - **Files Created**: `apps/api/Dockerfile`, `.dockerignore`.
+    - **Architecture**:
+      - Stage 1 (`builder`): Builds NestJS application using Nx (`npx nx build api --configuration=production`).
+      - Stage 2 (`runner`): Minimal Alpine Linux runtime with `NODE_ENV=production`, pruned production dependencies, non-root `node` user, and exposed port 3000.
+    - **Result**: Production-ready container specification for backend API.
+
+13. **[Package & Reference Updates]**:
+    - **Scripts Added**: `"docker:build:api": "docker build -f apps/api/Dockerfile -t medical-api:latest ."` in `package.json`.
+    - **Documentation**: Updated `CMD_INFO.md` (Docker container build), `PROJECT_STATE.md`, and `TODAY.md`.
+    - **Result**: All changes formatted and verified.
+
+14. **[CI Workflow Bugfix]**:
+    - **Issue**: Jest CLI reported `Unrecognized option "codeCoverage"`.
+    - **Fix**: Replaced `--codeCoverage` with Jest's native `--coverage` flag in `.github/workflows/ci.yml`.
+    - **Verification**: Verified `npx nx test api --ci --coverage`, `web`, and `mobile` pass 100% locally.
+    - **Result**: CI workflow test step fixed and verified.

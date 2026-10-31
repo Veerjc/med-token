@@ -58,10 +58,10 @@
 
 ### Phase 3: CI/CD Pipeline (GitHub Actions)
 
-- [ ] Create GitHub Actions PR workflow (`.github/workflows/ci.yml`) using `nx affected`
-- [ ] Add NestJS Dockerfile (multi-stage production build)
-- [ ] Add Angular Web build verification
-- [ ] Add Mobile Capacitor sync check
+- [x] Create GitHub Actions PR workflow (`.github/workflows/ci.yml`) using `nx affected`
+- [x] Add NestJS Dockerfile (multi-stage production build)
+- [x] Add `.dockerignore` for container builds
+- [x] Add `docker:build:api` script to root `package.json`
 
 ### Phase 4: Local Dev Environment & Containers
 
@@ -81,11 +81,11 @@
 
 ## 4. Active Task & Immediate Next Steps
 
-- **Active Task**: Phase 3 CI/CD Pipeline setup (`.github/workflows/ci.yml`) using `nx affected` for automated PR validation.
+- **Active Task**: Push feature branch `feat/ci-cd-pipeline` to GitHub, open PR against `main`, and transition to Phase 4 (Local Dev Environment & Containers).
 - **Next Steps**:
-  1. Create `.github/workflows/ci.yml` with lint, test, build steps using Nx affected caching.
-  2. Create production multi-stage `Dockerfile` for NestJS backend.
-  3. Commit and push Phase 2 & Phase 3 changes to GitHub (`origin/main`).
+  1. Commit and push feature branch `feat/ci-cd-pipeline` to `origin`.
+  2. Verify GitHub Actions workflow run on GitHub.
+  3. Prepare Phase 4 local PostgreSQL and Redis `docker-compose.yml`.
 
 ---
 
@@ -105,3 +105,4 @@
 - **2026-10-29**: Completed Phase 1 — Scaffolding Nx workspace, `apps/api` (NestJS), `apps/web` (Angular), `apps/mobile` (Angular + Ionic + Capacitor with iOS & Android targets), and `libs/shared/models`. Verified builds, tests, and linter across all projects. Added all commands to `BACKTRACK.md`.
 - **2026-10-31**: Created `TODAY.md` tracking strategy options. Executed Option 1: linked GitHub remote `https://github.com/Veerjc/med-token.git` and pushed initial baseline to `origin/main`. Activated Phase 2 Quality Gates.
 - **2026-10-31**: Completed Phase 2 Quality Gates — Installed and configured Prettier (`.prettierrc`, `.prettierignore`, `npm run format:check`, `npm run format:write`), Husky v9 (`.husky/pre-commit`, `.husky/commit-msg`), `lint-staged` (`.lintstagedrc.json`), and Commitlint (`commitlint.config.js`). Verified pre-commit auto-formatting and commit-msg Conventional Commits enforcement. Verified all builds, tests, and linter pass 100%.
+- **2026-10-31**: Created feature branch `feat/ci-cd-pipeline`. Implemented Phase 3 CI/CD Pipeline — Created `.github/workflows/ci.yml` using `nx affected` (Prettier, ESLint, Jest, and Production build verification), NestJS multi-stage production Dockerfile (`apps/api/Dockerfile`), `.dockerignore`, and added `docker:build:api` script to `package.json`.
