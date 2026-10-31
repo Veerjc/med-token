@@ -64,7 +64,9 @@ import { AppointmentDto } from '@medical-proj/shared-models';
           <ion-list>
             <ion-item lines="none">
               <ion-label>
-                <h3>Status: <strong>{{ nextAppointment().status }}</strong></h3>
+                <h3>
+                  Status: <strong>{{ nextAppointment().status }}</strong>
+                </h3>
                 <p>Time: {{ nextAppointment().scheduledAt }}</p>
                 <p>Notes: {{ nextAppointment().notes }}</p>
               </ion-label>

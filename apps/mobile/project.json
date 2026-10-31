@@ -8,9 +8,7 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/apps/mobile",
@@ -23,9 +21,7 @@
             "input": "apps/mobile/public"
           }
         ],
-        "styles": [
-          "apps/mobile/src/styles.scss"
-        ]
+        "styles": ["apps/mobile/src/styles.scss"]
       },
       "configurations": {
         "production": {
@@ -74,9 +70,7 @@
       "readyWhen": {
         "signal": true
       },
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "mobile:build",

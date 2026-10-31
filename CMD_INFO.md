@@ -6,13 +6,14 @@ This document is the central reference for all commands to run, build, test, lin
 
 ## 1. Quick Start: Daily Development
 
-| Command | Action | URL / Environment |
-| :--- | :--- | :--- |
-| `npm run dev:api` | Starts the NestJS API server | `http://localhost:3000` |
-| `npm run dev:web` | Starts the Angular Web Portal | `http://localhost:4200` |
+| Command              | Action                           | URL / Environment                     |
+| :------------------- | :------------------------------- | :------------------------------------ |
+| `npm run dev:api`    | Starts the NestJS API server     | `http://localhost:3000`               |
+| `npm run dev:web`    | Starts the Angular Web Portal    | `http://localhost:4200`               |
 | `npm run dev:mobile` | Starts the Mobile App in browser | `http://localhost:4200` (mobile view) |
 
 ### Alternative direct Nx commands:
+
 ```bash
 npx nx serve api
 npx nx serve web
@@ -27,6 +28,7 @@ npx nx serve web --port=4300
 ## 2. Build Commands
 
 ### Build All Projects
+
 ```bash
 # Using root script
 npm run build:all
@@ -36,6 +38,7 @@ CI=true npx nx run-many -t build
 ```
 
 ### Build Individual Projects
+
 ```bash
 # Build NestJS Backend (Webpack bundle in dist/apps/api)
 npx nx build api
@@ -48,6 +51,7 @@ npx nx build mobile
 ```
 
 ### Build Only Affected Projects (Git PR / CI)
+
 ```bash
 # Builds only projects changed compared to main branch
 npx nx affected -t build
@@ -58,6 +62,7 @@ npx nx affected -t build
 ## 3. Test Commands (Unit Testing with Jest)
 
 ### Run All Unit Tests
+
 ```bash
 # Using root script (non-interactive, CI-safe)
 npm run test:all
@@ -67,6 +72,7 @@ CI=true npx nx run-many -t test
 ```
 
 ### Run Tests for Individual Projects
+
 ```bash
 # Backend unit tests
 CI=true npx nx test api
@@ -79,6 +85,7 @@ CI=true npx nx test mobile
 ```
 
 ### Run Tests in Watch Mode (Interactive for TDD)
+
 ```bash
 npx nx test api --watch
 npx nx test web --watch
@@ -86,6 +93,7 @@ npx nx test mobile --watch
 ```
 
 ### Generate Code Coverage Reports
+
 ```bash
 # Generates coverage reports in coverage/apps/*
 CI=true npx nx run-many -t test --coverage
@@ -96,6 +104,7 @@ CI=true npx nx run-many -t test --coverage
 ## 4. Lint Commands (ESLint)
 
 ### Lint All Projects
+
 ```bash
 # Using root script
 npm run lint:all
@@ -105,6 +114,7 @@ CI=true npx nx run-many -t lint
 ```
 
 ### Lint Individual Projects
+
 ```bash
 npx nx lint api
 npx nx lint web
@@ -113,6 +123,7 @@ npx nx lint shared-models
 ```
 
 ### Auto-Fix Lint Errors
+
 ```bash
 # Auto-fixes fixable rules across the entire workspace
 CI=true npx nx run-many -t lint --fix
@@ -120,10 +131,39 @@ CI=true npx nx run-many -t lint --fix
 
 ---
 
-## 5. Mobile Commands (Ionic & Capacitor)
+## 5. Code Formatting & Quality Gates (Prettier & Git Hooks)
+
+### Format Check & Write
+
+```bash
+# Check code formatting with Prettier
+npm run format:check
+
+# Format and write fixes across all files with Prettier
+npm run format:write
+```
+
+### Git Hooks (Husky & lint-staged & Commitlint)
+
+- **Pre-commit**: Automatically runs `lint-staged` on staged files before each commit. Staged code is auto-formatted with Prettier and checked/fixed with ESLint.
+- **Commit-msg**: Automatically validates commit messages using Commitlint and Conventional Commits format (`feat:`, `fix:`, `chore:`, etc.).
+- **Manual Hook Testing**:
+  ```bash
+  # Test lint-staged manually:
+  npx lint-staged
+
+  # Test commitlint on a string:
+  echo "feat: add patient record module" | npx commitlint
+  ```
+
+---
+
+## 6. Mobile Commands (Ionic & Capacitor)
 
 ### Sync Web Assets to Native iOS & Android
+
 Run this every time you modify the mobile application code before testing on a device:
+
 ```bash
 # Builds mobile app and syncs native assets
 npm run mobile:sync
@@ -134,6 +174,7 @@ cd apps/mobile && npx cap sync && cd ../..
 ```
 
 ### Open Native IDEs
+
 ```bash
 # Open Xcode for iOS native development & simulator
 npm run mobile:ios
@@ -145,6 +186,7 @@ npm run mobile:android
 ```
 
 ### Run on Connected Device / Simulator from Terminal
+
 ```bash
 # iOS simulator
 cd apps/mobile && npx cap run ios
@@ -174,6 +216,7 @@ npx nx e2e mobile-e2e
 ```
 
 ### Add a New Playwright E2E Project
+
 ```bash
 # Add Playwright E2E target for an existing app
 npx nx g @nx/playwright:configuration --project=web
@@ -184,6 +227,7 @@ npx nx g @nx/playwright:configuration --project=web
 ## 7. Code Generation Cheat Sheet (Nx Generators)
 
 ### Backend (NestJS) Generators
+
 ```bash
 # Generate a new Feature Module inside apps/api
 npx nx g @nx/nest:module auth --directory=apps/api/src/app/auth
@@ -196,6 +240,7 @@ npx nx g @nx/nest:service auth --directory=apps/api/src/app/auth
 ```
 
 ### Web (Angular) Generators
+
 ```bash
 # Generate a Standalone Component in apps/web
 npx nx g @nx/angular:component features/patients/patient-list --project=web
@@ -208,12 +253,14 @@ npx nx g @nx/angular:guard core/guards/auth --project=web
 ```
 
 ### Mobile (Angular + Ionic) Generators
+
 ```bash
 # Generate a Mobile Page/Component
 npx nx g @nx/angular:component pages/appointments --project=mobile
 ```
 
 ### Shared Monorepo Library Generators
+
 ```bash
 # Generate a new Shared TypeScript Library (e.g., for API Clients)
 npx nx g @nx/js:library shared-data-access --directory=libs/shared/data-access --bundler=none --unitTestRunner=none --linter=eslint
@@ -226,12 +273,11 @@ npx nx g @nx/angular:library shared-ui --directory=libs/shared/ui --standalone=t
 
 ## 8. Monorepo Inspection & Utility Commands
 
-| Command | Action |
-| :--- | :--- |
-| `npx nx graph` | Opens an interactive 3D/2D visual graph of all apps and dependencies in browser |
-| `npx nx show projects` | Lists all projects configured in the workspace |
-| `npx nx show project api` | Inspects all targets, configurations, and paths for `api` |
-| `npx nx show project web` | Inspects all targets, configurations, and paths for `web` |
-| `npx nx show project mobile` | Inspects all targets, configurations, and paths for `mobile` |
-| `npx nx reset` | Clears the Nx daemon and cache if builds feel out-of-sync |
-
+| Command                      | Action                                                                          |
+| :--------------------------- | :------------------------------------------------------------------------------ |
+| `npx nx graph`               | Opens an interactive 3D/2D visual graph of all apps and dependencies in browser |
+| `npx nx show projects`       | Lists all projects configured in the workspace                                  |
+| `npx nx show project api`    | Inspects all targets, configurations, and paths for `api`                       |
+| `npx nx show project web`    | Inspects all targets, configurations, and paths for `web`                       |
+| `npx nx show project mobile` | Inspects all targets, configurations, and paths for `mobile`                    |
+| `npx nx reset`               | Clears the Nx daemon and cache if builds feel out-of-sync                       |

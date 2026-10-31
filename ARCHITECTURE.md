@@ -1,6 +1,7 @@
 # System Architecture & Technical Design
 
 ## 1. Executive Summary
+
 `medical-proj` is an enterprise-grade full-stack medical platform. The system is designed around an **Nx Integrated Monorepo** delivering a unified TypeScript ecosystem across a **NestJS** backend, an **Angular** web portal, and an **Ionic + Capacitor** cross-platform mobile application (iOS & Android).
 
 ---
@@ -114,18 +115,19 @@ medical-proj/
 
 To prevent architectural decay, Nx tags and ESLint boundaries enforce strict dependency rules:
 
-| Scope | May Import From | May NOT Import From |
-| :--- | :--- | :--- |
-| `apps/api` | `libs/shared/models` | `apps/web`, `apps/mobile`, `libs/shared/ui` |
-| `apps/web` | `libs/shared/models`, `libs/shared/data-access`, `libs/shared/ui` | `apps/api`, `apps/mobile` |
-| `apps/mobile` | `libs/shared/models`, `libs/shared/data-access`, `libs/shared/ui` | `apps/api`, `apps/web` |
-| `libs/shared/models` | *None (Zero external dependencies)* | Any `apps/*` or other `libs/*` |
+| Scope                | May Import From                                                   | May NOT Import From                         |
+| :------------------- | :---------------------------------------------------------------- | :------------------------------------------ |
+| `apps/api`           | `libs/shared/models`                                              | `apps/web`, `apps/mobile`, `libs/shared/ui` |
+| `apps/web`           | `libs/shared/models`, `libs/shared/data-access`, `libs/shared/ui` | `apps/api`, `apps/mobile`                   |
+| `apps/mobile`        | `libs/shared/models`, `libs/shared/data-access`, `libs/shared/ui` | `apps/api`, `apps/web`                      |
+| `libs/shared/models` | _None (Zero external dependencies)_                               | Any `apps/*` or other `libs/*`              |
 
 ---
 
 ## 5. Mobile Architecture (Ionic + Capacitor)
 
 ### Why Ionic + Capacitor for Healthcare?
+
 1. **Direct Angular Code Reuse**: 90%+ of services, validation logic, and DTOs are shared verbatim between `apps/web` and `apps/mobile`.
 2. **Native Device Hardware Access**:
    - `@capacitor/camera`: Instant photo capture for prescriptions and insurance cards.
@@ -138,6 +140,7 @@ To prevent architectural decay, Nx tags and ESLint boundaries enforce strict dep
 ---
 
 ## 6. Security & Healthcare Compliance Foundations
+
 - **HIPAA-Ready Logging**: All patient-data access is routed through an audit interceptor in `apps/api` logging timestamp, user ID, and resource ID (never logging unencrypted PHI).
 - **Authentication**: Stateless JWT with short-lived access tokens (15m) and secure HttpOnly refresh cookies (or Capacitor Secure Storage on mobile).
 - **Transport Security**: Enforce TLS 1.3 in transit and AES-256 for all stored medical documents.
@@ -165,16 +168,14 @@ flowchart LR
 
 ## 8. Developer Runbook & CLI Commands
 
-| Command | Action | Scope / URL |
-| :--- | :--- | :--- |
-| `npm run dev:api` | Starts NestJS API server | `http://localhost:3000` |
-| `npm run dev:web` | Starts Angular Web Portal | `http://localhost:4200` |
-| `npm run dev:mobile` | Starts Mobile App (Browser preview) | Local Dev Server |
-| `npm run build:all` | Compiles API, Web, and Mobile | Output to `dist/apps/*` |
-| `npm run test:all` | Runs all Jest unit tests non-interactively | All test suites |
-| `npm run lint:all` | Runs ESLint across all apps and libs | Strict TypeScript validation |
-| `npm run mobile:sync` | Builds mobile and syncs native assets | `apps/mobile/android` & `ios` |
-| `npm run mobile:ios` | Launches mobile app in Xcode | macOS native development |
-| `npm run mobile:android` | Launches mobile app in Android Studio | Android native development |
-
-
+| Command                  | Action                                     | Scope / URL                   |
+| :----------------------- | :----------------------------------------- | :---------------------------- |
+| `npm run dev:api`        | Starts NestJS API server                   | `http://localhost:3000`       |
+| `npm run dev:web`        | Starts Angular Web Portal                  | `http://localhost:4200`       |
+| `npm run dev:mobile`     | Starts Mobile App (Browser preview)        | Local Dev Server              |
+| `npm run build:all`      | Compiles API, Web, and Mobile              | Output to `dist/apps/*`       |
+| `npm run test:all`       | Runs all Jest unit tests non-interactively | All test suites               |
+| `npm run lint:all`       | Runs ESLint across all apps and libs       | Strict TypeScript validation  |
+| `npm run mobile:sync`    | Builds mobile and syncs native assets      | `apps/mobile/android` & `ios` |
+| `npm run mobile:ios`     | Launches mobile app in Xcode               | macOS native development      |
+| `npm run mobile:android` | Launches mobile app in Android Studio      | Android native development    |

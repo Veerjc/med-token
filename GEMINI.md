@@ -1,6 +1,7 @@
 # GEMINI.md - Workspace Instructions & Project Protocol
 
 ## 1. Project Overview & Tech Stack
+
 This workspace is a production-grade, full-stack medical and healthcare platform organized as an **Nx Integrated Monorepo**.
 
 - **Monorepo Engine**: Nx (latest, integrated apps & libs architecture)
@@ -15,6 +16,7 @@ This workspace is a production-grade, full-stack medical and healthcare platform
 ## 2. Session Protocol for Gemini / Antigravity
 
 Whenever a new session starts:
+
 1. **Always read `PROJECT_STATE.md` first**:
    - Check the **Current Phase**, **Active Task**, and **Immediate Next Steps**.
    - Announce the current project status and confirm the next prioritized task before executing.
@@ -34,6 +36,7 @@ Whenever a new session starts:
 ## 3. Engineering Standards & Conventions
 
 ### Angular & Ionic (Web & Mobile)
+
 - **Architecture**: 100% Standalone components, directives, and pipes (no legacy `NgModule`).
 - **Reactivity**: Prefer Angular **Signals** (`signal()`, `computed()`, `input()`, `output()`) for state.
 - **Change Detection**: Aim for Zoneless-ready architecture (`ChangeDetectionStrategy.OnPush` where applicable).
@@ -44,12 +47,14 @@ Whenever a new session starts:
   - Use native Capacitor plugins for device hardware (Haptics, Storage, Biometrics, Camera).
 
 ### NestJS (Backend)
+
 - **Architecture**: Feature modules, Controllers, Services, and Repositories.
 - **Validation**: Strict DTO validation using `class-validator` and `class-transformer`.
 - **API Documentation**: OpenAPI / Swagger decorators on all endpoints.
 - **Error Handling**: Standardized HTTP exception filters with structured error responses.
 
 ### Code Sharing & Monorepo
+
 - **Libraries Directory Structure**:
   - `libs/shared/models`: Plain TypeScript interfaces, DTOs, enums (no platform-specific dependencies).
   - `libs/shared/data-access`: Shared API services and state management.
@@ -58,6 +63,7 @@ Whenever a new session starts:
 ---
 
 ## 4. Git & Workflow Conventions
+
 - **Commit Messages**: Follow Conventional Commits:
   - `feat:` New features
   - `fix:` Bug fixes

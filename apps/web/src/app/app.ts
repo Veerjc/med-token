@@ -10,12 +10,17 @@ import { UserDto } from '@medical-proj/shared-models';
       <header class="navbar">
         <div class="logo">CareSync Medical Web Portal</div>
         <div class="user-badge">
-          Doctor: {{ currentUser().firstName }} {{ currentUser().lastName }} ({{ currentUser().role }})
+          Doctor: {{ currentUser().firstName }} {{ currentUser().lastName }} ({{
+            currentUser().role
+          }})
         </div>
       </header>
       <main class="content">
         <h1>Welcome to Hospital Operations</h1>
-        <p>Connected to NestJS backend and sharing types via <code>&#64;medical-proj/shared-models</code>.</p>
+        <p>
+          Connected to NestJS backend and sharing types via
+          <code>&#64;medical-proj/shared-models</code>.
+        </p>
         <router-outlet></router-outlet>
       </main>
     </div>
@@ -23,7 +28,8 @@ import { UserDto } from '@medical-proj/shared-models';
   styles: [
     `
       .web-shell {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         color: #1e293b;
       }
       .navbar {
