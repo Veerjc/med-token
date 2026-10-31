@@ -239,3 +239,9 @@
     - **Scripts Added**: `"docker:build:api": "docker build -f apps/api/Dockerfile -t medical-api:latest ."` in `package.json`.
     - **Documentation**: Updated `CMD_INFO.md` (Docker container build), `PROJECT_STATE.md`, and `TODAY.md`.
     - **Result**: All changes formatted and verified.
+
+14. **[CI Workflow Bugfix]**:
+    - **Issue**: Jest CLI reported `Unrecognized option "codeCoverage"`.
+    - **Fix**: Replaced `--codeCoverage` with Jest's native `--coverage` flag in `.github/workflows/ci.yml`.
+    - **Verification**: Verified `npx nx test api --ci --coverage`, `web`, and `mobile` pass 100% locally.
+    - **Result**: CI workflow test step fixed and verified.
