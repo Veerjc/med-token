@@ -1,100 +1,136 @@
-# MedicalProj
+# MedToken — Full-Stack Healthcare & Patient Queue Monorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+[![CI / PR Quality Gates](https://github.com/Veerjc/med-token/actions/workflows/ci.yml/badge.svg)](https://github.com/Veerjc/med-token/actions/workflows/ci.yml)
+[![Nx Integrated Monorepo](https://img.shields.io/badge/Nx-v24.0.2-blue?logo=nx)](https://nx.dev)
+[![NestJS Backend](https://img.shields.io/badge/NestJS-v11.0-red?logo=nestjs)](https://nestjs.com)
+[![Angular Web](https://img.shields.io/badge/Angular-v22.2-crimson?logo=angular)](https://angular.dev)
+[![Ionic + Capacitor](https://img.shields.io/badge/Ionic%20%2B%20Capacitor-iOS%20%26%20Android-3880ff?logo=ionic)](https://capacitorjs.com)
+[![Code Style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+Production-grade medical clinic management, patient portal, and real-time appointment/OPD queue token platform architected as an **Nx Integrated Monorepo**.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+---
 
-## Run tasks
+## 🏥 Architecture Overview
 
-To run tasks with Nx use:
-
-```sh
-npx nx <target> <project-name>
+```
+medical-proj/
+├── apps/
+│   ├── api/             # NestJS 11 Backend API Gateway & Microservices
+│   ├── web/             # Angular 22 Web Clinic & Doctor Portal (Standalone, Signals)
+│   └── mobile/          # Angular 22 + Ionic 9 + Capacitor 8 (iOS & Android)
+├── libs/
+│   └── shared/
+│       └── models/      # Cross-platform TypeScript DTOs, Enums & Interfaces
+├── .github/workflows/   # CI/CD Quality Gates (Nx Affected PR Validation)
+├── docker-compose.yml   # Local PostgreSQL 16 & Redis 7 Infrastructure
+└── .husky/              # Git Hooks (lint-staged Pre-commit & Commitlint)
 ```
 
-For example:
+---
 
-```sh
-npx nx build myproject
+## ⚡ Tech Stack & Cloud Infrastructure
+
+- **Monorepo Manager**: Nx Integrated Workspace (v24.0.2)
+- **Backend**: NestJS 11 (Modular architecture, OpenAPI/Swagger, `@nestjs/config` + Joi validation)
+- **Web Frontend**: Angular 22 (100% Standalone components, Signals, SCSS, Zoneless-ready)
+- **Mobile Frontend**: Angular 22 + Ionic Framework UI + Capacitor 8 (iOS Xcode & Android Gradle native targets)
+- **Shared Code**: `@medical-proj/shared-models` (Zero-dependency pure TypeScript models)
+- **Database & Cache**: PostgreSQL 16 & Redis 7 (via Docker Compose locally)
+- **Cloud Target (ADR-006)**: **Amazon Web Services (AWS)**
+  - **API**: AWS ECS Fargate (Serverless Docker containers)
+  - **Web**: Amazon CloudFront CDN + S3 SPA bucket
+  - **Database**: Amazon RDS PostgreSQL 16 (Multi-AZ, KMS encrypted)
+  - **Cache & Real-time Queue**: Amazon ElastiCache for Redis
+  - **Documents / Scans**: Amazon S3 with SSE-KMS and presigned URLs
+
+---
+
+## 🚀 Quick Start: Local Development
+
+### 1. Prerequisites
+
+- **Node.js**: `v22.x`
+- **npm**: `v10.x`
+- **Docker & Docker Compose** (for PostgreSQL & Redis)
+
+### 2. Installation & Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/Veerjc/med-token.git
+cd med-token/medical-proj
+
+# Install all dependencies
+npm install
+
+# Setup local environment variables
+cp .env.example .env
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### 3. Start Local Infrastructure (PostgreSQL & Redis)
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-
-```sh
-npx nx add @nx/react
+```bash
+npm run docker:db:up
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+### 4. Run Applications Concurrently
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+```bash
+# Run all 3 applications simultaneously:
+npm run dev:all
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
+# Or run individual applications:
+npm run dev:api     # http://localhost:3000/api
+npm run dev:web     # http://localhost:4200
+npm run dev:mobile  # http://localhost:4201
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+---
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 🛠️ Verification & Quality Gates
 
-## Set up CI!
+This repository enforces strict automated quality gates locally via **Husky** and remotely via **GitHub Actions**:
 
-### Step 1
+```bash
+# Verify code formatting across entire workspace
+npm run format:check
 
-To connect to Nx Cloud, run the following command:
+# Auto-fix code formatting with Prettier
+npm run format:write
 
-```sh
-npx nx connect
+# Run ESLint across all projects
+npm run lint:all
+
+# Run Jest unit test suites
+npm run test:all
+
+# Build all applications for production
+npm run build:all
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+---
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## 📱 Mobile Development (Ionic + Capacitor)
 
-### Step 2
+```bash
+# Build mobile web assets and sync to native iOS & Android projects:
+npm run mobile:sync
 
-Use the following command to configure a CI workflow for your workspace:
+# Open native iOS project in Xcode (macOS only):
+npm run mobile:ios
 
-```sh
-npx nx g ci-workflow
+# Open native Android project in Android Studio:
+npm run mobile:android
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+---
 
-## Install Nx Console
+## 📖 Governance & Documentation
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-# med-token
+- [PROJECT_STATE.md](PROJECT_STATE.md) — Living project status, active phase, and master roadmap.
+- [ARCHITECTURE.md](ARCHITECTURE.md) — System boundaries, data flow, and AWS deployment topology.
+- [CMD_INFO.md](CMD_INFO.md) — Central command reference and developer cheat sheet.
+- [BACKTRACK.md](BACKTRACK.md) — Chronological execution audit log of all commands and changes.
+- [GEMINI.md](GEMINI.md) — Coding conventions, architectural rules, and session protocols.

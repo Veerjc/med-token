@@ -4,17 +4,49 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug api with Nx",
+      "name": "Launch & Debug API (nx serve api)",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["nx", "serve", "api"],
-      "env": {
-        "NODE_OPTIONS": "--inspect=9229"
-      },
+      "autoAttachChildProcesses": true,
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "skipFiles": ["<node_internals>/**"],
       "sourceMaps": true,
-      "outFiles": ["${workspaceFolder}/apps/api/dist/**/*.(m|c|)js", "!**/node_modules/**"]
+      "restart": true,
+      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.(m|c|)js", "!**/node_modules/**"]
+    },
+    {
+      "type": "node",
+      "request": "attach",
+      "name": "Attach to Running API (localhost:9229)",
+      "port": 9229,
+      "restart": true,
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**"],
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/apps/api/**/*.(m|c|)js", "!**/node_modules/**"]
+    },
+    {
+      "type": "node-terminal",
+      "request": "launch",
+      "name": "Debug via JavaScript Terminal (npx nx serve api)",
+      "command": "npx nx serve api"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Unit Test (Jest)",
+      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      "args": [
+        "--runInBand",
+        "--testPathPattern",
+        "${fileBasenameNoExtension}",
+        "--config",
+        "apps/api/jest.config.cts"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
 }

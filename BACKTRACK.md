@@ -255,3 +255,60 @@
     - **Decision**: Formally selected Amazon Web Services (AWS) as production cloud target.
     - **Specifications**: Documented AWS cloud topology (ECS Fargate, RDS PostgreSQL 16, ElastiCache Redis, S3 + CloudFront, KMS) in `ARCHITECTURE.md` and recorded ADR-006 in `PROJECT_STATE.md`.
     - **Result**: Cloud target codified; prepared for Phase 4 Local Dev Environment & Containers.
+
+17. **[Branch Creation]**: `git checkout -b feat/local-dev-containers`
+    - **Purpose**: Create dedicated feature branch for Phase 4 local development environment setup.
+    - **Branch**: `feat/local-dev-containers`.
+    - **Result**: Successfully created and switched to branch.
+
+18. **[Configuration Dependencies Installation]**: `npm install @nestjs/config joi && npm install -D @types/joi`
+    - **Purpose**: Add environment variable management and validation tooling for NestJS API.
+    - **Result**: Installed dependencies cleanly.
+
+19. **[Local Dev Infrastructure & Environment Guards]**:
+    - **Files Created**: `docker-compose.yml` (PostgreSQL 16 & Redis 7 services with healthchecks, persistent volumes, and bridge network), `.env.example`, `.env`.
+    - **Git Protection**: Added `.env`, `.env.local` to `.gitignore`.
+    - **API Integration**: Created `apps/api/src/app/config/env.validation.ts` using Joi; registered `ConfigModule.forRoot({ isGlobal: true, validate: validateEnv })` in `AppModule`.
+    - **Scripts Added**: `"docker:db:up"`, `"docker:db:down"`, `"docker:db:logs"` in `package.json`.
+    - **Documentation**: Updated `CMD_INFO.md`, `PROJECT_STATE.md`, and `TODAY.md`.
+    - **Result**: Local database and caching layer containerized; environment variables validated on API startup.
+
+20. **[Quality Gate Verification]**:
+    - **Commands**: `npm run format:check`, `npm run lint:all`, `npm run test:all`, `npm run build:all`.
+    - **Result**: 100% clean formatting, 4/4 lint projects pass, 3/3 test suites pass, 3/3 production builds pass.
+
+21. **[Comprehensive Documentation Update]**:
+    - **Files Modified/Created**: `medical-proj/README.md`, `libs/shared/models/README.md`, `GEMINI.md` (root pointer), `PROJECT_STATE.md`, `TODAY.md`.
+    - **Updates**:
+      - Transformed `medical-proj/README.md` into production-ready project documentation with badges, monorepo directory layout, quick start guide, quality gates, and mobile runbook.
+      - Documented `@medical-proj/shared-models` contracts (`UserDto`, `AppointmentDto`, `ApiResponse<T>`) and architectural isolation rule.
+      - Updated root `GEMINI.md` pointer with all documentation files.
+    - **Result**: All project documentation synchronized, formatted, and up to date.
+
+22. **[Full Docker Application Execution & Verification]**:
+    - **Command**: `npm run docker:all:up` (`docker compose up -d --build`).
+    - **Containers Verified**:
+      - `medical-postgres` (`postgres:16-alpine`): Healthy on port `5432`.
+      - `medical-redis` (`redis:7-alpine`): Healthy on port `6379`.
+      - `medical-api` (`medical-proj-api`): Up on port `3000`.
+    - **Verification**: `curl -i http://localhost:3000/api` returned `HTTP 200 OK` with JSON `ApiResponse<UserDto>`.
+    - **Result**: Full containerized application stack running locally and verified healthy.
+
+23. **[Frontend Applications Execution & Verification]**:
+    - **Command**: `npx nx run-many -t serve -p web mobile` (added root script `"dev:frontends": "nx run-many -t serve -p web mobile"` in `package.json` and explicit port 4200 in `apps/web/project.json`).
+    - **Services Running**:
+      - `apps/web` (Angular 22 Standalone Web Portal): Listening on `http://localhost:4200` (`HTTP 200 OK`).
+      - `apps/mobile` (Ionic 9 + Angular 22 Patient Portal preview): Listening on `http://localhost:4201` (`HTTP 200 OK`).
+    - **Full Stack Status**:
+      - `medical-postgres` (PostgreSQL 16) on `localhost:5432`
+      - `medical-redis` (Redis 7) on `localhost:6379`
+      - `medical-api` (NestJS 11 in Docker) on `http://localhost:3000/api`
+      - `web` (Angular 22 Web Portal) on `http://localhost:4200`
+      - `mobile` (Ionic 9 + Capacitor 8 Mobile Portal) on `http://localhost:4201`
+    - **Result**: Entire multi-app system (backend container stack + both frontend applications) is actively running, responsive, and verified.
+
+24. **[Teardown & Shutdown of All Local Services]**:
+    - **Frontend Teardown**: Cancelled background dev server task (`nx run-many -t serve -p web mobile`).
+    - **Docker Teardown**: Executed `docker compose down`, stopping and removing `medical-api`, `medical-postgres`, `medical-redis`, and `medical_network`.
+    - **Verification**: Verified via `lsof` and `docker compose ps` that ports `3000`, `4200`, `4201`, `5432`, and `6379` are completely free with zero background processes or containers remaining.
+    - **Result**: Clean teardown of all local services.

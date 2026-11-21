@@ -1,0 +1,410 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// =========================================================================
+// ENUMS
+// =========================================================================
+
+enum UserRole {
+  SUPER_ADMIN
+  ONBOARDING_PARTNER
+  CLINIC_ADMIN
+  DOCTOR
+  RECEPTIONIST
+  PATIENT
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum OrganizationType {
+  SOLO_CLINIC
+  POLYCLINIC
+  HOSPITAL
+}
+
+enum FacilityDisplayType {
+  CLINIC
+  HOSPITAL
+  BRANCH
+}
+
+enum SessionType {
+  MORNING
+  AFTERNOON
+  EVENING
+  NIGHT
+}
+
+enum SessionStatus {
+  NOT_ARRIVED
+  ARRIVED
+  OPD_STARTED
+  LUNCH_BREAK
+  ON_ROUNDS
+  EMERGENCY_DUTY
+  CLOSED
+}
+
+enum TokenStatus {
+  BOOKED
+  CALLED
+  SERVING
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum BookingSource {
+  ONLINE_QR
+  RECEPTION_WALK_IN
+}
+
+enum PaymentMode {
+  ONLINE_GATEWAY
+  COUNTER_CASH
+  COUNTER_UPI
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+// =========================================================================
+// MODELS
+// =========================================================================
+
+model Organization {
+  id                 String              @id @default(cuid())
+  name               String
+  slug               String              @unique
+  displayType        FacilityDisplayType @default(CLINIC)
+  logoUrl            String?             // Brand logo
+  bannerUrl          String?             // Waiting area / facade picture
+  contactPhone       String
+  contactEmail       String?
+  platformFeePercent Decimal             @default(3.00) @db.Decimal(4, 2) // 2.0% to 5.0%
+  referralCode       String?             // Partner attribution code
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+
+  clinics           Clinic[]
+  departments       Department[]
+  users             User[]
+  doctors           Doctor[]
+  onboardingPartner OnboardingPartner?  @relation(fields: [referralCode], references: [referralCode])
+
+  @@index([slug])
+  @@index([referralCode])
+}
+
+model Clinic {
+  id             String                @id @default(cuid())
+  organizationId String
+  name           String
+  clinicQrSlug   String                @unique // Direct Entrance QR identifier
+  city           String
+  address        String
+  mapUrl         String?               // Google Maps navigation URL
+  images         String[]              @default([]) // Entrance, reception, waiting lounge photos
+  latitude       Decimal?              @db.Decimal(10, 7)
+  longitude      Decimal?              @db.Decimal(10, 7)
+  contactPhone   String?
+  isActive       Boolean               @default(true)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  deletedAt      DateTime?
+
+  organization   Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  operatingHours ClinicOperatingHour[]
+  holidays       ClinicHoliday[]
+  doctors        Doctor[]
+  sessions       Session[]
+  tokens         Token[]
+  users          User[]
+
+  @@index([organizationId])
+  @@index([city])
+  @@index([clinicQrSlug])
+}
+
+model ClinicOperatingHour {
+  id             String   @id @default(cuid())
+  clinicId       String
+  dayOfWeek      Int      // 0 = Sunday, 1 = Monday ... 6 = Saturday
+  isOpen         Boolean  @default(true)
+  openTime       String   @default("08:00") // HH:mm format
+  closeTime      String   @default("21:30") // HH:mm format
+  breakStartTime String?
+  breakEndTime   String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  clinic         Clinic   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, dayOfWeek])
+  @@index([clinicId])
+}
+
+model ClinicHoliday {
+  id        String   @id @default(cuid())
+  clinicId  String
+  date      DateTime @db.Date
+  title     String   // E.g. "Diwali", "National Holiday"
+  createdAt DateTime @default(now())
+
+  clinic    Clinic   @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+
+  @@unique([clinicId, date])
+  @@index([clinicId, date])
+}
+
+model Department {
+  id             String        @id @default(cuid())
+  organizationId String
+  name           String        // E.g. General Medicine, Pediatrics, Dental
+  description    String?
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  doctors        Doctor[]
+
+  @@index([organizationId])
+}
+
+model User {
+  id             String             @id @default(cuid())
+  organizationId String?            // Scoped to organization
+  clinicId       String?            // Branch desk assignment for Receptionists
+  phone          String             @unique // E.164 format (+91XXXXXXXXXX)
+  email          String?            @unique
+  passwordHash   String?            // Nullable for guest/OTP-only patients
+  name           String?
+  avatarUrl      String?
+  gender         Gender?
+  dateOfBirth    DateTime?          @db.Date
+  role           UserRole           @default(PATIENT)
+  isActive       Boolean            @default(true)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  organization      Organization?      @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  clinic            Clinic?            @relation(fields: [clinicId], references: [id], onDelete: SetNull)
+  doctorProfile     Doctor?
+  partnerProfile    OnboardingPartner?
+  tokensBooked      Token[]            @relation("PatientTokens")
+  collectedPayments Payment[]          @relation("CollectedPayments")
+
+  @@index([phone])
+  @@index([role])
+  @@index([organizationId])
+  @@index([clinicId])
+}
+
+model Doctor {
+  id                      String                @id @default(cuid())
+  userId                  String                @unique
+  organizationId          String
+  clinicId                String
+  departmentId            String?
+  specialization          String
+  qualifications          String?               // E.g. "MBBS, MD"
+  registrationNumber      String?               // Medical council registration number
+  experienceYears         Int?                  // Years of practice
+  languages               String[]              @default([])
+  about                   String?
+  avatarUrl               String?
+  consultationFee         Decimal               @default(0.00) @db.Decimal(10, 2)
+  defaultSlotDurationMins Int                   @default(10) // Calculation baseline
+  defaultTokenCapacity    Int                   @default(30) // Capacity cap
+  doctorQrSlug            String                @unique      // Direct Doctor QR identifier
+  isActive                Boolean               @default(true)
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  deletedAt               DateTime?
+
+  user              User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization      Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  clinic            Clinic                @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  department        Department?           @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  schedules         DoctorScheduleShift[]
+  holidays          DoctorHoliday[]
+  sessions          Session[]
+  tokens            Token[]
+  consultationNotes ConsultationNote[]
+
+  @@index([organizationId])
+  @@index([clinicId])
+  @@index([doctorQrSlug])
+  @@index([specialization])
+}
+
+model DoctorScheduleShift {
+  id            String      @id @default(cuid())
+  doctorId      String
+  dayOfWeek     Int         // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  sessionType   SessionType // MORNING, AFTERNOON, EVENING, NIGHT
+  startTime     String      // HH:mm format
+  endTime       String      // HH:mm format
+  tokenCapacity Int         @default(30)
+  isActive      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  doctor        Doctor      @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, dayOfWeek, sessionType])
+  @@index([doctorId, dayOfWeek])
+}
+
+model DoctorHoliday {
+  id          String       @id @default(cuid())
+  doctorId    String
+  date        DateTime     @db.Date
+  sessionType SessionType? // null = Full-Day Leave; MORNING/EVENING = Half-Day Leave
+  reason      String?
+  createdAt   DateTime     @default(now())
+
+  doctor      Doctor       @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, date, sessionType])
+  @@index([doctorId, date])
+}
+
+model Session {
+  id                        String        @id @default(cuid())
+  doctorId                  String
+  clinicId                  String
+  date                      DateTime      @db.Date
+  sessionType               SessionType
+  status                    SessionStatus @default(NOT_ARRIVED)
+  tokenCapacity             Int           @default(30) // Dynamic doctor capacity limit
+  bookingCutoffAt           DateTime      // 30 mins before scheduled end
+  currentServingTokenNumber Int?          @default(0)
+  rollingAvgDurationSeconds Int           @default(600) // Default 10 mins
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+
+  doctor                    Doctor        @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  clinic                    Clinic        @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  tokens                    Token[]
+
+  @@unique([doctorId, date, sessionType])
+  @@index([date, status])
+}
+
+model Token {
+  id                          String            @id @default(cuid())
+  universalTrackingId         String            @unique // Unique non-sequential tracking slug
+  tokenNumber                 Int               // 1 to n per session
+  sessionId                   String
+  doctorId                    String
+  clinicId                    String
+  patientUserId               String?           // Nullable for guest walk-in
+  patientPhone                String            // Required E.164
+  patientName                 String            @default("Guest Patient")
+  source                      BookingSource     @default(ONLINE_QR)
+  status                      TokenStatus       @default(BOOKED)
+  holdCount                   Int               @default(0) // Incremented when pushed back
+  calledAt                    DateTime?
+  checkupStartedAt            DateTime?
+  checkupCompletedAt          DateTime?
+  consultationDurationSeconds Int?
+  cancellationReason          String?
+  createdAt                   DateTime          @default(now())
+  updatedAt                   DateTime          @updatedAt
+
+  session                     Session           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  doctor                      Doctor            @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  clinic                      Clinic            @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  patient                     User?             @relation("PatientTokens", fields: [patientUserId], references: [id], onDelete: SetNull)
+  payment                     Payment?
+  consultationNote            ConsultationNote?
+
+  @@unique([sessionId, tokenNumber])
+  @@unique([sessionId, patientPhone, patientName])
+  @@index([universalTrackingId])
+  @@index([sessionId, status])
+  @@index([patientPhone])
+}
+
+model Payment {
+  id                String        @id @default(cuid())
+  tokenId           String        @unique
+  consultationFee   Decimal       @db.Decimal(10, 2)
+  platformFee       Decimal       @db.Decimal(10, 2)
+  totalAmount       Decimal       @db.Decimal(10, 2)
+  mode              PaymentMode   @default(ONLINE_GATEWAY)
+  status            PaymentStatus @default(PENDING)
+  gatewayTxnId      String?
+  collectedByUserId String?       // Receptionist user ID who accepted counter cash/UPI
+  paidAt            DateTime?
+  refundedAt        DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  token             Token         @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  collectedBy       User?         @relation("CollectedPayments", fields: [collectedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([mode])
+}
+
+model ConsultationNote {
+  id                    String    @id @default(cuid())
+  tokenId               String    @unique
+  doctorId              String
+  diagnosis             String?   // Clinical summary
+  prescriptions         Json?     // Array of medicines [{name, dosage, frequency, durationDays}]
+  recommendedTests      String[]  @default([]) // Ordered lab tests & scans
+  treatmentInstructions String?   // Pre-visit treatments / guidelines
+  followUpDate          DateTime? @db.Date
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  token                 Token     @relation(fields: [tokenId], references: [id], onDelete: Cascade)
+  doctor                Doctor    @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([doctorId])
+}
+
+model OnboardingPartner {
+  id                           String              @id @default(cuid())
+  userId                       String?             @unique
+  name                         String
+  phone                        String              @unique
+  email                        String?             @unique
+  referralCode                 String              @unique
+  referredByPartnerId          String?
+  commissionPercentage         Decimal             @default(10.00) @db.Decimal(5, 2)
+  overrideCommissionPercentage  Decimal             @default(2.00) @db.Decimal(5, 2)
+  isActive                     Boolean             @default(true)
+  createdAt                    DateTime            @default(now())
+  updatedAt                    DateTime            @updatedAt
+
+  user                         User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  referredBy                   OnboardingPartner?  @relation("PartnerNetwork", fields: [referredByPartnerId], references: [id], onDelete: SetNull)
+  downlinePartners             OnboardingPartner[] @relation("PartnerNetwork")
+  organizations                Organization[]
+
+  @@index([referralCode])
+  @@index([referredByPartnerId])
+}
+
