@@ -60,3 +60,18 @@ apps/mobile/ios/App/Pods
 apps/mobile/ios/App/build
 apps/mobile/ios/App/DerivedData
 
+# Protected UX Designs & Local System Specs (Strictly Non-Committable)
+UX-design-plan.md
+UI_DESIGN_DISCUSSION.md
+ux-designs/
+context.md
+TECH_SPEC.md
+ROADMAP_2.0.md
+SYSTEM_DESIGN.md
+BUDGET_CALCULATION.md
+PROJECT_STATE.md
+BACKTRACK.md
+api-details.md
+test-requests.http
+
+

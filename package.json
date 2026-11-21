@@ -21,7 +21,8 @@
     "docker:all:up": "docker compose up -d --build",
     "docker:all:down": "docker compose down",
     "docker:all:logs": "docker compose logs -f",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "prisma generate --schema=apps/api/prisma/schema.prisma"
   },
   "private": true,
   "devDependencies": {
